@@ -28,6 +28,9 @@ fi
 if [ ! -d 'shared' ]; then
   mkdir shared
 fi
+if [ ! -d 'shared' ]; then
+  mkdir shared/magento
+fi
 if [ ! -d 'backups' ]; then
   mkdir backups
 fi

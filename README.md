@@ -26,3 +26,9 @@ LIVE=${WORKING_DIR}/${LIVE_DIRECTORY_ROOT}              # this is for soft link 
 TARGET=$WORKING_DIR/$MAGENTO_DIR/$project               # this will become the source so that we can make a soft link between LIVE from TARGET
 
 ```
+
+Structure Of Zero Downtime
+--------------------------------
+
+
+

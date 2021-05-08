@@ -28,7 +28,11 @@ TARGET=$WORKING_DIR/$MAGENTO_DIR/$project               # this will become the s
 ```
 
 Structure Of Zero Downtime
---------------------------------
+-----
+-The Script will create below mention directory
+```
+
+```
 
 
 

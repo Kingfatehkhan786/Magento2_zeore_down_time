@@ -43,11 +43,106 @@ backups
 #### The script will exit with error code after that you need to copy some files over there in shared/magento folder list is mention below:
 
 ```
-releases
-shared
-shared/magento
-backups
+config.php file location (project)/app/etc/ 
+env.php  file location (project)/app/etc/ 
+media   folder location (project)/pub/media
+var/log  folder location (project)/var/log
+vendor    folder location (project)/vendor 
+
+
+```
+#### Copy all the files and folder in the magento folder under the shared folder 
+
+### Databases config include varibles 
+
+```
+dbhost=`grep -E "host|dbname|username|password"   $WORKING_DIR/$MAGENTO_DIR/$project/app/etc/env.php | awk   '{gsub(/" /, "", $1); print $1, $3; }' |  awk 'NR==1{print $2}' | sed 's/\,$//' | tr -d \'\" |  awk '{host=$1 ; print host ; }'`
+dbname=`grep -E "host|dbname|username|password"   $WORKING_DIR/$MAGENTO_DIR/$project/app/etc/env.php | awk   '{gsub(/" /, "", $1); print $1, $3; }' |  awk 'NR==2{print $2}' | sed 's/\,$//' | tr -d \'\" | awk '{host=$1 ; print host ; }'` 
+username=`grep -E "host|dbname|username|password" $WORKING_DIR/$MAGENTO_DIR/$project/app/etc/env.php | awk   '{gsub(/" /, "", $1); print $1, $3; }' |  awk 'NR==3{print $2}' | sed 's/\,$//' | tr -d \'\" |  awk '{host=$1 ; print host ; }'`
+password=`grep -E "host|dbname|username|password" $WORKING_DIR/$MAGENTO_DIR/$project/app/etc/env.php | awk   '{gsub(/" /, "", $1); print $1, $3; }' |  awk 'NR==4{print $2}' | sed 's/\,$//' | tr -d \'\" |  awk '{host=$1 ; print host ; }'`
 
 ```
 
+#### You dont need to mention the DB access details in script cause the above mention commands will collect the details its self so you dont need to worry about it.
+
+###  Composer install 
+```
+cd $WORKING_DIR/$MAGENTO_DIR/$project/ && pwd && /opt/cpanel/ea-php74/root/usr/bin/php -dmemory_limit=-1    /opt/cpanel/composer/bin/composer install --no-dev --prefer-dist --optimize-autoloader
+
+```
+
+
+
+### DATABASE UPDATE
+
+```
+cd $WORKING_DIR/$MAGENTO_DIR/$project/ && /opt/cpanel/ea-php74/root/usr/bin/php -dmemory_limit=-1   bin/magento setup:db:status && UPGRADE_NEEDED=0 || UPGRADE_NEEDED=1
+if [[ 1 == ${UPGRADE_NEEDED} ]]; then
+
+    mysqldump -h $dbhost -u $username -p$password  $dbname | gzip -c > ${WORKING_DIR}/backups/$dbname`date '+%d%b%Y'_%H%M%S`.tar.gz
+  /opt/cpanel/ea-php74/root/usr/bin/php -dmemory_limit=-1  	bin/magento setup:upgrade 
+fi
+
+```
+
+### GENERATE FILES
+
+```
+cd $WORKING_DIR/$MAGENTO_DIR/$project/
+/opt/cpanel/ea-php74/root/usr/bin/php -dmemory_limit=-1 bin/magento setup:di:compile
+/opt/cpanel/ea-php74/root/usr/bin/php -dmemory_limit=-1   bin/magento setup:static-content:deploy -f ${LANGUAGES} 
+find var vendor pub/static pub/media app/etc -type f -exec chmod g+w {} \; && find var vendor pub/static pub/media app/etc -type d -exec chmod g+w {} \;
+
+```
+
+
+### SWITCH LIVE
+
+```
+cd ${WORKING_DIR}
+if [[ -L "${LIVE}" ]]
+then
+    echo "${LIVE} unlinking the symlink "
+    unlink ${LIVE}
+fi
+sleep 2
+
+ln -sf ${TARGET} ${LIVE}
+
+sleep 2
+
+if [[ -L "${LIVE}" ]]
+then
+    echo "${LIVE}  the symlink has created  "
+    
+fi
+
+```
+
+### UPDATE CRONTAB
+
+```
+cd ${LIVE} &&  bin/magento cron:install --force
+```
+
+### CLEAR ALL CACHES
+```
+cd ${LIVE} &&  bin/magento cache:clear
+```
+
+### CLEAN UP
+```
+KEEP_RELEASES_TAIL=`expr ${KEEP_RELEASES} + 1`
+cd ${WORKING_DIR}/releases && rm -rf `ls -t | tail -n +${KEEP_RELEASES_TAIL}`
+KEEP_DB_BACKUPS_TAIL=`expr ${KEEP_DB_BACKUPS} + 1`
+cd ${WORKING_DIR}/backups && rm -rf `ls -t | tail -n +${KEEP_DB_BACKUPS_TAIL}`
+```
+### RETURN TO WORKING DIR
+```
+cd ${WORKING_DIR}
+```
+
+
+### unset the var which this script created 
+unset {dbhost,dbname,username,password}
 

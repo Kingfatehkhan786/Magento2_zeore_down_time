@@ -26,13 +26,20 @@ LIVE=${WORKING_DIR}/${LIVE_DIRECTORY_ROOT}              # this is for soft link 
 TARGET=$WORKING_DIR/$MAGENTO_DIR/$project               # this will become the source so that we can make a soft link between LIVE from TARGET
 
 ```
+### Please dont change the line number upside down or else it will not work.
 
 Structure Of Zero Downtime
 -----
--The Script will create below mention directory
-```
+### The Script will create below mention directory
 
 ```
+releases
+shared
+backups
+
+```
+
+#### The script will exit with error code after that make a magneto folder and put the config file over there 
 
 
 

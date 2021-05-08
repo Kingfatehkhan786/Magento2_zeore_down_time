@@ -35,11 +35,19 @@ Structure Of Zero Downtime
 ```
 releases
 shared
+shared/magento
 backups
 
 ```
 
-#### The script will exit with error code after that make a magneto folder and put the config file over there 
+#### The script will exit with error code after that you need to copy some files over there in shared/magento folder list is mention below:
 
+```
+releases
+shared
+shared/magento
+backups
+
+```
 
 

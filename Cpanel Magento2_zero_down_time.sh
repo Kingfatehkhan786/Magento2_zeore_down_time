@@ -14,11 +14,12 @@ MAGENTO_DIR='releases'                                  # this is where build go
 LIVE_DIRECTORY_ROOT='public_html'                       # code live location this is where the code get executed from browser
 date=`date '+%d%b%Y'_%H%M%S`                            # for version control which use date and time once the build got created 
 GIT_REPO=${WORKING_DIR}/GIT_REPO                        # Git code using Rsync goes in this location 
-KEEP_RELEASES=3                                         # this is version control
-KEEP_DB_BACKUPS=3                                       # This database backup 
-project=Rose_$date
-LIVE=${WORKING_DIR}/${LIVE_DIRECTORY_ROOT}            # this is for soft link which will be created after everything goes fine
-TARGET=$WORKING_DIR/$MAGENTO_DIR/$project
+KEEP_RELEASES=3                                         # This is only to keep last three backup of Code
+KEEP_DB_BACKUPS=3                                       # This is only to keep last three backup of DB 
+project=Name_$date                                      # Name your Project Make sure only Chnage the NAME valu not the date variable 
+LIVE=${WORKING_DIR}/${LIVE_DIRECTORY_ROOT}              # this is for soft link which will be created after everything goes fine
+TARGET=$WORKING_DIR/$MAGENTO_DIR/$project               # this will become the source so that we can make a soft link between LIVE from TARGET
+PHP='/usr/bin/php7.4'                                   # change the version of php as you want 
 
 
 # INIT DIRECTORIES
@@ -55,22 +56,22 @@ password=`grep -E "host|dbname|username|password" $WORKING_DIR/$MAGENTO_DIR/$pro
 
 # Composer install if needed please uncomment below line
 
-cd $WORKING_DIR/$MAGENTO_DIR/$project/ && pwd && /opt/cpanel/ea-php74/root/usr/bin/php -dmemory_limit=-1    /opt/cpanel/composer/bin/composer install --no-dev --prefer-dist --optimize-autoloader
+cd $WORKING_DIR/$MAGENTO_DIR/$project/ && pwd && $PHP -dmemory_limit=-1    /opt/cpanel/composer/bin/composer install --no-dev --prefer-dist --optimize-autoloader
 
 
 # DATABASE UPDATE
-cd $WORKING_DIR/$MAGENTO_DIR/$project/ && /opt/cpanel/ea-php74/root/usr/bin/php -dmemory_limit=-1   bin/magento setup:db:status && UPGRADE_NEEDED=0 || UPGRADE_NEEDED=1
+cd $WORKING_DIR/$MAGENTO_DIR/$project/ && $PHP -dmemory_limit=-1   bin/magento setup:db:status && UPGRADE_NEEDED=0 || UPGRADE_NEEDED=1
 if [[ 1 == ${UPGRADE_NEEDED} ]]; then
 
     mysqldump -h $dbhost -u $username -p$password  $dbname | gzip -c > ${WORKING_DIR}/backups/$dbname`date '+%d%b%Y'_%H%M%S`.tar.gz
-  /opt/cpanel/ea-php74/root/usr/bin/php -dmemory_limit=-1  	bin/magento setup:upgrade 
+  $PHP -dmemory_limit=-1  	bin/magento setup:upgrade 
 fi
 
 
 # # GENERATE FILES
 cd $WORKING_DIR/$MAGENTO_DIR/$project/
-/opt/cpanel/ea-php74/root/usr/bin/php -dmemory_limit=-1 bin/magento setup:di:compile
-/opt/cpanel/ea-php74/root/usr/bin/php -dmemory_limit=-1   bin/magento setup:static-content:deploy -f ${LANGUAGES} 
+$PHP -dmemory_limit=-1 bin/magento setup:di:compile
+$PHP -dmemory_limit=-1   bin/magento setup:static-content:deploy -f ${LANGUAGES} 
 find var vendor pub/static pub/media app/etc -type f -exec chmod g+w {} \; && find var vendor pub/static pub/media app/etc -type d -exec chmod g+w {} \;
 
 

@@ -115,7 +115,7 @@ fi
 cd ${LIVE} &&  bin/magento cron:install --force
 
 # CLEAR ALL CACHES
-cd ${LIVE} &&  bin/magento cache:clear
+cd ${LIVE} &&  bin/magento  c:f
 
 
 #CLEAN UP

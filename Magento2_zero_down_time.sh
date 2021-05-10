@@ -50,7 +50,6 @@ cp -rvf ${WORKING_DIR}/shared/magento/composer.phar $WORKING_DIR/$MAGENTO_DIR/$p
 cp -rvf ${WORKING_DIR}/shared/magento/env.php $WORKING_DIR/$MAGENTO_DIR/$project/app/etc/env.php
 ln -sf ${WORKING_DIR}/shared/magento/media  $WORKING_DIR/$MAGENTO_DIR/$project/pub/media
 ln -sf ${WORKING_DIR}/shared/magento/var/log $WORKING_DIR/$MAGENTO_DIR/$project/var/log
-#cp -raf ${WORKING_DIR}/shared/magento/vendor $WORKING_DIR/$MAGENTO_DIR/$project/
 
 if [[ -d "${Vendor}" ]]
 then

@@ -46,6 +46,7 @@ cp -raf $GIT_REPO $WORKING_DIR/$MAGENTO_DIR/$project
 
 cd ${WORKING_DIR}
 cp -rvf ${WORKING_DIR}/shared/magento/config.php $WORKING_DIR/$MAGENTO_DIR/$project/app/etc/config.php
+cp -rvf ${WORKING_DIR}/shared/magento/composer.phar $WORKING_DIR/$MAGENTO_DIR/$project/composer.phar
 cp -rvf ${WORKING_DIR}/shared/magento/env.php $WORKING_DIR/$MAGENTO_DIR/$project/app/etc/env.php
 ln -sf ${WORKING_DIR}/shared/magento/media  $WORKING_DIR/$MAGENTO_DIR/$project/pub/media
 ln -sf ${WORKING_DIR}/shared/magento/var/log $WORKING_DIR/$MAGENTO_DIR/$project/var/log
@@ -62,7 +63,7 @@ password=`grep -E "host|dbname|username|password" $WORKING_DIR/$MAGENTO_DIR/$pro
 
 # Composer install if needed please uncomment below line
 
-cd $WORKING_DIR/$MAGENTO_DIR/$project/ && pwd && $PHP -dmemory_limit=-1    /opt/cpanel/composer/bin/composer install --no-dev --prefer-dist --optimize-autoloader
+cd $WORKING_DIR/$MAGENTO_DIR/$project/ && pwd && $PHP -dmemory_limit=-1   ./composer.phar install --no-dev --prefer-dist --optimize-autoloader
 
 
 # DATABASE UPDATE

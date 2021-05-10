@@ -66,7 +66,13 @@ PHP='/usr/bin/php7.4'                                   # change the version of 
 
 ### Please dont change the line number upside down or else it will not work.
 
-#### For PHP version each server is diffrent for finding the php location as per your version search it or do google
+
+# GIT_REPO
+#### In  GIT_REPO folder you can just put the git repo and then can take pull directly over the repo rest the script will do for you. Or else use Jenkins with Rsync and put the code and automate the stuff :P 
+
+
+
+### For PHP version each server is diffrent for finding the php location as per your version search it or do google
 
 #### in OS like ubuntu the location is mention below 
 

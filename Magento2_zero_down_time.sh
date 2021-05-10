@@ -68,10 +68,10 @@ cd $WORKING_DIR/$MAGENTO_DIR/$project/ && pwd && $PHP -dmemory_limit=-1   ./comp
 
 # DATABASE UPDATE
 cd $WORKING_DIR/$MAGENTO_DIR/$project/ && $PHP -dmemory_limit=-1   bin/magento setup:db:status && UPGRADE_NEEDED=0 || UPGRADE_NEEDED=1
-if [[ 1 == ${UPGRADE_NEEDED} ]]; then
-
-    mysqldump -h $dbhost -u $username -p$password  $dbname | gzip -c > ${WORKING_DIR}/backups/$dbname`date '+%d%b%Y'_%H%M%S`.tar.gz
-  $PHP -dmemory_limit=-1  	bin/magento setup:upgrade 
+if [[ 1 == ${UPGRADE_NEEDED} ]]; 
+then
+mysqldump -h $dbhost -u $username -p$password  $dbname | gzip -c > ${WORKING_DIR}/backups/$dbname`date '+%d%b%Y'_%H%M%S`.tar.gz
+$PHP -dmemory_limit=-1  	bin/magento setup:upgrade 
 fi
 
 

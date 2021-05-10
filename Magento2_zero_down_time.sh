@@ -21,6 +21,12 @@ LIVE=${WORKING_DIR}/${LIVE_DIRECTORY_ROOT}              # this is for soft link 
 TARGET=$WORKING_DIR/$MAGENTO_DIR/$project               # this will become the source so that we can make a soft link between LIVE from TARGET
 PHP='/usr/bin/php7.4'                                   # change the version of php as you want 
 
+# For PHP version each server is diffrent for finding the php location as per your version search it or do google
+# IN ubuntu the location is /usr/bin/php, /usr/bin/php7.1,  /usr/bin/php7.2,  /usr/bin/php7.3,  /usr/bin/php7.4,  /usr/bin/php8.0,
+# for Cpanle /opt/cpanel/ea-php74/root/usr/bin/php, /opt/cpanel/ea-php73/root/usr/bin/php,  /opt/cpanel/ea-php72/root/usr/bin/php,  /opt/cpanel/ea-php71/root/usr/bin/php and so on.....
+# Just change ea-php version as you want just make sure the version of php is installed and running 
+
+
 
 # INIT DIRECTORIES
 if [ ! -d 'releases' ]; then

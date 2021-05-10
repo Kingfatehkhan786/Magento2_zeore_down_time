@@ -20,7 +20,7 @@ project=Name_$date                                      # Name your Project Make
 LIVE=${WORKING_DIR}/${LIVE_DIRECTORY_ROOT}              # this is for soft link which will be created after everything goes fine
 TARGET=$WORKING_DIR/$MAGENTO_DIR/$project               # this will become the source so that we can make a soft link between LIVE from TARGET
 PHP='/usr/bin/php7.4'                                   # change the version of php as you want 
-
+Vendor=${LIVE}/vendor
 # For PHP version each server is diffrent for finding the php location as per your version search it or do google
 # IN ubuntu the location is /usr/bin/php, /usr/bin/php7.1,  /usr/bin/php7.2,  /usr/bin/php7.3,  /usr/bin/php7.4,  /usr/bin/php8.0,
 # for Cpanle /opt/cpanel/ea-php74/root/usr/bin/php, /opt/cpanel/ea-php73/root/usr/bin/php,  /opt/cpanel/ea-php72/root/usr/bin/php,  /opt/cpanel/ea-php71/root/usr/bin/php and so on.....
@@ -50,7 +50,18 @@ cp -rvf ${WORKING_DIR}/shared/magento/composer.phar $WORKING_DIR/$MAGENTO_DIR/$p
 cp -rvf ${WORKING_DIR}/shared/magento/env.php $WORKING_DIR/$MAGENTO_DIR/$project/app/etc/env.php
 ln -sf ${WORKING_DIR}/shared/magento/media  $WORKING_DIR/$MAGENTO_DIR/$project/pub/media
 ln -sf ${WORKING_DIR}/shared/magento/var/log $WORKING_DIR/$MAGENTO_DIR/$project/var/log
-cp -raf ${WORKING_DIR}/shared/magento/vendor $WORKING_DIR/$MAGENTO_DIR/$project/
+#cp -raf ${WORKING_DIR}/shared/magento/vendor $WORKING_DIR/$MAGENTO_DIR/$project/
+
+if [[ -d "${Vendor}" ]]
+then
+
+    echo "${Vendor}  has the updated vendor "
+    cp -raf ${Vendor} $WORKING_DIR/$MAGENTO_DIR/$project/
+    else
+    echo "${Vendor}   The vendor is not updated "
+    cp -raf ${WORKING_DIR}/shared/magento/vendor $WORKING_DIR/$MAGENTO_DIR/$project/
+
+fi
 
 # Databases config include varibles 
 dbhost=`grep -E "host|dbname|username|password"   $WORKING_DIR/$MAGENTO_DIR/$project/app/etc/env.php | awk   '{gsub(/" /, "", $1); print $1, $3; }' |  awk 'NR==1{print $2}' | sed 's/\,$//' | tr -d \'\" |  awk '{host=$1 ; print host ; }'`
